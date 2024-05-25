@@ -4,6 +4,11 @@ class ConsoleDisplay:
     def __init__(self):
         b0 = win32console.CreateConsoleScreenBuffer(DesiredAccess = win32con.GENERIC_READ | win32con.GENERIC_WRITE, ShareMode=0, SecurityAttributes=None, Flags=1)
         b1 = win32console.CreateConsoleScreenBuffer(DesiredAccess = win32con.GENERIC_READ | win32con.GENERIC_WRITE, ShareMode=0, SecurityAttributes=None, Flags=1)
+        info = b0.GetConsoleScreenBufferInfo()
+
+        self.width = info['Size'].X
+        self.height = info['Size'].Y
+
         self.buffers = [b0, b1]
         self.active_buffer = 0
         self.back_buffer = 1
@@ -29,4 +34,9 @@ class ConsoleDisplay:
         buff = self.buffers[self.back_buffer]
 
         buff.WriteConsoleOutputCharacter(str, win32console.PyCOORDType(0, 0))
+
+    def pixel(self, x, y, c):
+        buff = self.buffers[self.back_buffer]
+
+        buff.WriteConsoleOutputCharacter(c, win32console.PyCOORDType(int(x), int(y)))
         
